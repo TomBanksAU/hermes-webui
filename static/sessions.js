@@ -2580,6 +2580,7 @@ function _setActiveProjectFilter(projectId) {
   const next = projectId === NO_PROJECT_FILTER ? NO_PROJECT_FILTER : (projectId || null);
   if (_activeProject === next) return;
   _activeProject = next;
+  _resetSessionSelectionForScopeChange();
   renderSessionListFromCache();
   void renderSessionList({deferWhileInteracting:false});
 }

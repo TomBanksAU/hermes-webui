@@ -42,6 +42,7 @@ def _chat_panel_html() -> str:
 
 def _fixture_script() -> str:
     functions = [
+        "_setActiveProjectFilter",
         "_focusSessionBatchControl",
         "_resetSessionSelectionForScopeChange",
         "_pruneSessionSelectionToCurrentScope",
@@ -62,6 +63,8 @@ def _fixture_script() -> str:
             "let _sessionSelectMode = false;",
             "const _selectedSessions = new Set();",
             "let _batchProjectPickerCleanup = null;",
+            "const NO_PROJECT_FILTER = '__none__';",
+            "let _activeProject = 'project-1';",
             "let _sessionVisibleSidebarIds = ['session-1', 'session-2'];",
             "const t = (key, value) => ({",
             "  cancel: 'Cancel',",
@@ -250,6 +253,28 @@ def test_scope_replacement_releases_selection_state():
 
         assert page.get_by_role("button", name="Select", exact=True).is_visible()
         assert not page.get_by_role("toolbar", name="Conversation selection").is_visible()
+        assert page.evaluate("window.__sessionSelectionState()") == {
+            "mode": False,
+            "selected": [],
+        }
+    finally:
+        browser.close()
+        manager.stop()
+
+
+def test_project_filter_change_releases_hidden_selection_state():
+    manager, browser, page = _browser_page({"width": 300, "height": 640})
+    try:
+        page.get_by_role("button", name="Select", exact=True).click()
+        page.locator('.session-select-cb[data-sid="session-1"]').check()
+
+        page.evaluate("_setActiveProjectFilter('project-2')")
+
+        assert page.get_by_role("button", name="Select", exact=True).is_visible()
+        assert not page.get_by_role("toolbar", name="Conversation selection").is_visible()
+        assert page.get_by_role("button", name="Archive", exact=True).count() == 0
+        assert page.get_by_role("button", name="Move", exact=True).count() == 0
+        assert page.get_by_role("button", name="Delete", exact=True).count() == 0
         assert page.evaluate("window.__sessionSelectionState()") == {
             "mode": False,
             "selected": [],

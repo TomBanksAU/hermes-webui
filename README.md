@@ -3,7 +3,7 @@
 Deterministic before/after screenshots for `feat/dock-session-select-controls`.
 
 - Base: `nesquena/hermes-webui` `3c7fbe3809ff573199faee9d812179fcbeff2028`
-- Head: `dfcce641ff1bb0634b40e2eebac9346a853167f2`
+- Head: `7178b8f6db2c9a32283534e7c030ac897e721573`
 - Data: 36 synthetic sessions in credential-free isolated state directories
 - Browser errors: none
 - Viewports: desktop 1280×800; mobile 390×844

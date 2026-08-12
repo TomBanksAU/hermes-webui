@@ -3938,6 +3938,13 @@ function _setShowAllProfiles(enabled){
   try{ localStorage.setItem(SHOW_ALL_PROFILES_STORAGE_KEY,_showAllProfiles?'1':'0'); }catch(_e){}
 }
 
+function _toggleArchivedSessionsVisibility(){
+  _resetSessionSelectionForScopeChange();
+  _showArchived=!_showArchived;
+  if(_showArchived) _archivedRowsLoadedLimit=SESSION_ARCHIVED_PAGE_SIZE;
+  return renderSessionList();
+}
+
 _restoreShowAllProfiles();
 _restoreSessionSourceFilter();
 let _sessionActionMenu = null;
@@ -7867,11 +7874,7 @@ function renderSessionListFromCache(){
     const toggle=document.createElement('div');
     toggle.style.cssText='font-size:10px;padding:4px 10px;color:var(--muted);cursor:pointer;text-align:center;opacity:.7;';
     toggle.textContent=_showArchived?'Hide archived':'Show '+archivedCount+' archived';
-    toggle.onclick=()=>{
-      _showArchived=!_showArchived;
-      if(_showArchived) _archivedRowsLoadedLimit=SESSION_ARCHIVED_PAGE_SIZE;
-      renderSessionList();
-    };
+    toggle.onclick=_toggleArchivedSessionsVisibility;
     list.appendChild(toggle);
   }
   // Empty state for active project filter

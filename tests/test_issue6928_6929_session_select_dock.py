@@ -361,7 +361,9 @@ def test_batch_move_picker_is_bounded_and_keyboard_accessible():
         picker = page.get_by_role("group", name="Move")
         assert picker.is_visible()
         assert move_button.get_attribute("aria-expanded") == "true"
-        assert page.evaluate("document.activeElement && document.activeElement.textContent") == "No project"
+        page.wait_for_function(
+            "document.activeElement && document.activeElement.textContent === 'No project'"
+        )
         assert picker.evaluate("el => el.scrollHeight > el.clientHeight")
 
         page.evaluate("_renderBatchActionBar()")
